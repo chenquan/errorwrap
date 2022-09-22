@@ -54,6 +54,20 @@ func TestFn(t *testing.T) {
 		}).Finish()
 
 		assert.ErrorIs(t, err, errFoo)
+
+		err = Fn(func() error {
+			return nil
+		}).Fn(func() error {
+			return nil
+		}).Fn(func() error {
+			return nil
+		}).Fns(func() error {
+			return nil
+		}, func() error {
+			return nil
+		}).Finish()
+
+		assert.NoError(t, err)
 	})
 
 	t.Run("no err", func(t *testing.T) {

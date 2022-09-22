@@ -28,20 +28,20 @@ func (e *ErrorFn) Fns(fns ...func() error) *ErrorFn {
 func (e *ErrorFn) Finish() error {
 	for _, fn := range e.fns {
 		err := fn()
+		if err == nil {
+			continue
+		}
 
 		i, ok := err.(interface {
 			NotNil() bool
 		})
 		if ok {
-			if i.NotNil() {
-				return err
-			}
-		} else {
-			if err != nil {
-				return err
+			if !i.NotNil() {
+				continue
 			}
 		}
 
+		return err
 	}
 
 	return nil
